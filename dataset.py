@@ -13,12 +13,15 @@ class AudioMNISTDataset(Dataset):
         audio_dir_path (str): Path to the directory containing the audio files.    
     """
 
-    def __init__(self, audio_dir_path, transformation, num_samples_per_clip=48000):
+    def __init__(self, audio_dir_path, transformation, 
+                 num_samples_per_clip, 
+                 device):
 
         """Initializes the dataset."""
 
         self.audio_dir_path = audio_dir_path
-        self.transformation = transformation
+        self.device = device
+        self.transformation = transformation.to(self.device)
         self.num_samples_per_clip = num_samples_per_clip
         self.file_list = []
         self.label_list = []
@@ -39,6 +42,7 @@ class AudioMNISTDataset(Dataset):
         """Returns a tuple (signal, label, file_path)"""
 
         signal, sr = torchaudio.load(self.file_list[index])
+        signal = signal.to(self.device)
         signal = self._right_zero_pad(signal)
         signal_transformed = self.transformation(signal)
         return signal,signal_transformed, sr, self.label_list[index], self.file_list[index]
@@ -82,6 +86,14 @@ if __name__ == "__main__":
 
     AUDIO_DIR_PATH = "/home/armak/Python_projects_WSL/Audio_MNIST_classification/data"
     SAMPLE_RATE = 48000
+    NUM_SAMPLES = 48000
+
+    if torch.cuda.is_available():
+        device = "cuda"
+    else:
+        device = "cpu"
+    
+    print(f'Using {device} device')
 
     mel_spectrogram_transformation = torchaudio.transforms.MelSpectrogram(
         sample_rate=SAMPLE_RATE,
@@ -90,13 +102,16 @@ if __name__ == "__main__":
         n_mels=64
     )
 
-    audio_mnist = AudioMNISTDataset(AUDIO_DIR_PATH, mel_spectrogram_transformation)
+    audio_mnist = AudioMNISTDataset(AUDIO_DIR_PATH, 
+                                    mel_spectrogram_transformation, 
+                                    NUM_SAMPLES, 
+                                    device)
 
     print(f"There are {len(audio_mnist)} samples in the dataset.")
 
     signal, signal_transformed, sr, label, file_path = audio_mnist[0]
 
-    print(f'{signal.shape}, {label}, {file_path}')
+    print(f'{signal.shape}, {signal_transformed.shape}, {label}, {file_path}')
 
     # Plot the distribution of the audio file lengths and sample rates
     # plot_distribution_of_audio_lengths(audio_mnist)
