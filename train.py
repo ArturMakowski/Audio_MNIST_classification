@@ -9,7 +9,7 @@ from model import AudioMNISTModel
 def train(model, data_loader, loss_fn, optimiser, device, epochs):
     for i in range(epochs):
         print(f"Epoch {i+1}")
-        for input, target in data_loader:
+        for _, input, _, target, _ in data_loader:
             input, target = input.to(device), target.to(device)
 
             # calculate loss
@@ -53,7 +53,7 @@ if __name__ == "__main__":
                                     device)
     
     train_dataloader = DataLoader(audio_mnist_dataset, batch_size=BATCH_SIZE, shuffle=True)
-
+    
     # construct model and assign it to device
     audio_mnist_model = AudioMNISTModel().to(device)
     print(audio_mnist_model)
