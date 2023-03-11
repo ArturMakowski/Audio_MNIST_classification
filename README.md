@@ -5,7 +5,8 @@ This is a repository for simple audio classification using the Audio MNIST datas
 ## Acknowledgements
 
 <a id="1">[1]
-S. Becker, M. Ackermann, S. Lapuschkin, K.-R. M\"uller, and W. Samek, "Interpreting and Explaining Deep Neural Networks for Classification of Audio Signals," CoRR, vol. abs/1807.03418, 2018.
+Sören Becker, Marcel Ackermann, Sebastian Lapuschkin, Klaus-Robert Müller, Wojciech Samek, "Interpreting and Explaining Deep Neural Networks for Classification of Audio Signals," CoRR, vol. abs/1807.03418, 2018.
+</a>
 <!-- @ARTICLE{becker2018interpreting,
   author    = {Becker, S\"oren and Ackermann, Marcel and Lapuschkin, Sebastian and M\"uller, Klaus-Robert and Samek, Wojciech},
   title     = {Interpreting and Explaining Deep Neural Networks for Classification of Audio Signals},

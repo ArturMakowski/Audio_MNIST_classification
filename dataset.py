@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset
 import torchaudio
-import pandas as pd
 
 class AudioMNISTDataset(Dataset):
 
