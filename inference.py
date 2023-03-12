@@ -1,17 +1,23 @@
 import torch
 import torchaudio
+import numpy as np
 
 from dataset import AudioMNISTDataset
 from model import AudioMNISTModel
 
-def predict(model, input, target, class_mapping):
+def predict(model, input, target):
     model.eval()
     with torch.no_grad():
         predictions = model(input)
         predicted_index = predictions[0].argmax(0)
-        predicted = class_mapping[predicted_index]
-        expected = class_mapping[target]
+        predicted = predicted_index
+        expected = target
     return predicted, expected
+
+def accuracy(y_pred, y_true):
+    correct = np.sum(np.array(y_pred)==np.array(y_true)) 
+    acc = (correct / len(y_pred)) * 100
+    return acc
 
 if __name__ == "__main__":
 
@@ -22,9 +28,9 @@ if __name__ == "__main__":
     AUDIO_DIR_PATH = "/home/armak/Python_projects_WSL/Audio_MNIST_classification/data"
 
     # load back the model
-    cnn = AudioMNISTModel()
+    audio_classifier = AudioMNISTModel()
     state_dict = torch.load("AudioMNISTModel.pth")
-    cnn.load_state_dict(state_dict)
+    audio_classifier.load_state_dict(state_dict)
 
     # load audio mnist dataset
     mel_spectrogram_transformation = torchaudio.transforms.MelSpectrogram(
@@ -34,17 +40,23 @@ if __name__ == "__main__":
         n_mels=64
     )
 
-    audio_mnist_dataset = AudioMNISTDataset(AUDIO_DIR_PATH, 
+    audio_mnist_dataset_test = AudioMNISTDataset(AUDIO_DIR_PATH, 
                                     mel_spectrogram_transformation, 
                                     NUM_SAMPLES, 
-                                    device)
+                                    device,
+                                    train_set=False)
 
 
     # get a sample from the audio mnist dataset for inference
-    input, target = audio_mnist_dataset[0][1], audio_mnist_dataset[0][3] # [batch size, num_channels, fr, time]
-    input.unsqueeze_(0)
+    y_pred = []
+    y_true = []
+    for i in range(len(audio_mnist_dataset_test)):
+        predicted, expected = predict(audio_classifier, audio_mnist_dataset_test[i][1].unsqueeze_(0), audio_mnist_dataset_test[i][3])
+        y_pred.append(predicted)
+        y_true.append(expected)
+        print(f"Predicted: '{predicted}', expected: '{expected}'")
 
-    # make an inference
-    predicted, expected = predict(cnn, input, target,
-                                  class_mapping)
-    print(f"Predicted: '{predicted}', expected: '{expected}'")
+    # calculate accuracy
+    acc = accuracy(y_pred, y_true)
+
+    
