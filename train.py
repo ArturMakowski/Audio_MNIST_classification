@@ -6,17 +6,21 @@ from torch.utils.data import DataLoader
 from dataset import AudioMNISTDataset
 from model import AudioMNISTModel
 
-def train(model, data_loader, loss_fn, accuracy_fn, optimiser, device, epochs):
+def train(model, data_loader, loss_fn, optimiser, device, epochs):
     for i in range(epochs):
         print(f"Epoch {i+1}")
-        for (_, input, _, target, _) in data_loader:
+        for input, target, _ in data_loader:
             # move data to device
             input, target = input.to(device), target.to(device)
 
             # calculate loss
             prediction = model(input)
             loss = loss_fn(prediction, target)
-            acc = accuracy_fn(prediction, target)
+
+            # calculate accuracy
+            y_preds = torch.softmax(prediction, dim=1).argmax(dim=1).to(device)
+            correct = torch.eq(target, y_preds).sum().item()
+            acc = (correct / len(y_preds)) * 100
 
             # backpropagate error and update weights
             optimiser.zero_grad()
@@ -68,13 +72,9 @@ if __name__ == "__main__":
     loss_fn = nn.CrossEntropyLoss()
     optimiser = torch.optim.Adam(audio_mnist_model.parameters(),
                                  lr=LEARNING_RATE)
-
-    def accuracy(y_pred, y_true):
-        correct = torch.eq(y_true, y_pred).sum().item()
-        acc = (correct / len(y_pred)) * 100
-        return acc
+    
     # train model
-    train(audio_mnist_model, train_dataloader, loss_fn, accuracy, optimiser, device, EPOCHS)
+    train(audio_mnist_model, train_dataloader, loss_fn, optimiser, device, EPOCHS)
 
     # save model
     torch.save(audio_mnist_model.state_dict(), "AudioMNISTModel.pth")

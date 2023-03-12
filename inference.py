@@ -9,8 +9,7 @@ def predict(model, input, target):
     model.eval()
     with torch.no_grad():
         predictions = model(input)
-        predicted_index = predictions[0].argmax(0)
-        predicted = predicted_index
+        predicted = predictions[0].argmax(0)
         expected = target
     return predicted, expected
 
@@ -29,7 +28,7 @@ if __name__ == "__main__":
 
     # load back the model
     audio_classifier = AudioMNISTModel()
-    state_dict = torch.load("AudioMNISTModel.pth")
+    state_dict = torch.load("/home/armak/Python_projects_WSL/Audio_MNIST_classification/AudioMNISTModel.pth")
     audio_classifier.load_state_dict(state_dict)
 
     # load audio mnist dataset
@@ -51,12 +50,15 @@ if __name__ == "__main__":
     y_pred = []
     y_true = []
     for i in range(len(audio_mnist_dataset_test)):
-        predicted, expected = predict(audio_classifier, audio_mnist_dataset_test[i][1].unsqueeze_(0), audio_mnist_dataset_test[i][3])
+        predicted, expected = predict(audio_classifier, 
+                                  audio_mnist_dataset_test[i][0].unsqueeze_(0), 
+                                  audio_mnist_dataset_test[i][1])        
         y_pred.append(predicted)
         y_true.append(expected)
-        print(f"Predicted: '{predicted}', expected: '{expected}'")
+        # print(f"Predicted: '{predicted}', expected: '{expected}'")
 
     # calculate accuracy
     acc = accuracy(y_pred, y_true)
+    print(f"Accuracy: {acc} %")
 
     

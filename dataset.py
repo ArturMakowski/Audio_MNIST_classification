@@ -48,7 +48,7 @@ class AudioMNISTDataset(Dataset):
 
     def __getitem__(self, index):
 
-        """Returns a tuple (signal,signal_transformed(melSpec), sample_rate, label, file_path) for a given index."""
+        """Returns a tuple (signal_transformed(melSpec), label, file_path) for a given index."""
 
         signal, sr = torchaudio.load(self.file_list[index])
         signal = signal.to(self.device)
