@@ -61,7 +61,6 @@ if __name__ == "__main__":
                                     device,
                                     train_set=True)
     
-    
     train_dataloader = DataLoader(audio_mnist_dataset_train, batch_size=BATCH_SIZE, shuffle=True)
     
     # construct model and assign it to device

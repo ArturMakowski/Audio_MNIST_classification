@@ -47,7 +47,7 @@ class AudioMNISTModel(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, input):
-        x = self.conv1(input)
+        x = self.conv1(input)                                                           
         x = self.conv2(x)
         x = self.conv3(x)
         x = self.conv4(x)
