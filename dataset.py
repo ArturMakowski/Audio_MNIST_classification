@@ -33,18 +33,18 @@ class AudioMNISTDataset(Dataset):
                 if file.endswith(".wav"):
                     self.file_list.append(os.path.join(root, file))
                     self.label_list.append(int(file.split("_")[0]))
-            if train_set:
-                if len(self.file_list) == 24000:
-                    break
-            else:
-                if len(self.file_list) == 6000:
-                    break  
-        # if train_set:
-        #     self.file_list = self.file_list[:int(len(self.file_list)*0.8)]
-        #     self.label_list = self.label_list[:int(len(self.file_list)*0.8)]
-        # else:
-        #     self.file_list = self.file_list[int(len(self.file_list)*0.8):]
-        #     self.label_list = self.label_list[int(len(self.file_list)*0.8):]
+            # if train_set:
+            #     if len(self.file_list) == 24000:
+            #         break
+            # else:
+            #     if len(self.file_list) == 6000:
+            #         break  
+        if train_set:
+            self.file_list = self.file_list[:int(len(self.file_list)*0.8)]
+            self.label_list = self.label_list[:int(len(self.label_list)*0.8)]
+        else:
+            self.file_list = self.file_list[int(len(self.file_list)*0.8):]
+            self.label_list = self.label_list[int(len(self.label_list)*0.8):]
 
     def __len__(self):
 

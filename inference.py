@@ -4,6 +4,7 @@ import numpy as np
 
 from dataset import AudioMNISTDataset
 from model import AudioMNISTModel
+from sklearn.metrics import classification_report
 
 def predict(model, input, target):
     model.eval()
@@ -59,6 +60,8 @@ if __name__ == "__main__":
 
     # calculate accuracy
     acc = accuracy(y_pred, y_true)
-    print(f"Accuracy: {acc} %")
+    print(f"Accuracy: {acc:.2f} %")
 
+    # print classification report
+    print(classification_report(y_true, y_pred, target_names=class_mapping))
     

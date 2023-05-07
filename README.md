@@ -2,6 +2,19 @@
 
 This is a repository for simple audio classification using the Audio MNIST dataset. The Audio MNIST dataset is a collection of 10 classes of audio clips, which are spoken digits from 0 to 9 from 60 speakers. You can find more information about the dataset [here](https://github.com/soerenab/AudioMNIST).
 
+## Requirements
+
+```{python}
+pip install -r requirements.txt
+```
+
+## Usage
+
+- dataset.py - preprocesses the dataset and creates a pytorch dataset object
+- model.py - contains the model architecture - a simple CNN for audio classification
+- train.py - trains the CNN model
+- inferece.py - loads the trained model and performs inference on the test set
+
 ## Acknowledgements
 
 <a id="1">[1]
