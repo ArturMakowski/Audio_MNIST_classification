@@ -7,6 +7,8 @@ from dataset import AudioMNISTDataset
 from model import AudioMNISTModel
 
 def train(model, data_loader, loss_fn, optimiser, device, epochs):
+    loss = None
+    acc = None
     for i in range(epochs):
         print(f"Epoch {i+1}")
         for input, target, _ in data_loader:
@@ -26,8 +28,8 @@ def train(model, data_loader, loss_fn, optimiser, device, epochs):
             optimiser.zero_grad()
             loss.backward()
             optimiser.step()
-
-        print(f"Train loss: {loss.item()}, train accuracy: {acc}")
+        if loss is not None and acc is not None:
+            print(f"Train loss: {loss.item()}, train accuracy: {acc}")
         print("---------------------------")
     print("Finished training")
 

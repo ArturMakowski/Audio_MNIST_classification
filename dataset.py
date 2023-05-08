@@ -26,6 +26,7 @@ class AudioMNISTDataset(Dataset):
         self.device = device
         self.transformation = transformation.to(self.device)
         self.num_samples_per_clip = num_samples_per_clip
+        self.train_set = train_set
         self.file_list = []
         self.label_list = []
         for root, _, files in os.walk(self.audio_dir_path):
@@ -39,7 +40,7 @@ class AudioMNISTDataset(Dataset):
             # else:
             #     if len(self.file_list) == 6000:
             #         break  
-        if train_set:
+        if self.train_set:
             self.file_list = self.file_list[:int(len(self.file_list)*0.8)]
             self.label_list = self.label_list[:int(len(self.label_list)*0.8)]
         else:
