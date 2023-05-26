@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from dataset import AudioMNISTDataset
 from model import AudioMNISTModel
 
+
 def train(model, data_loader, loss_fn, optimiser, device, epochs):
     loss = None
     acc = None
@@ -34,7 +35,6 @@ def train(model, data_loader, loss_fn, optimiser, device, epochs):
     print("Finished training")
 
 
-
 if __name__ == "__main__":
 
     BATCH_SIZE = 128
@@ -57,14 +57,15 @@ if __name__ == "__main__":
         hop_length=512,
         n_mels=64)
 
-    audio_mnist_dataset_train = AudioMNISTDataset(AUDIO_DIR_PATH, 
-                                    mel_spectrogram_transformation, 
-                                    NUM_SAMPLES, 
-                                    device,
-                                    train_set=True)
-    
-    train_dataloader = DataLoader(audio_mnist_dataset_train, batch_size=BATCH_SIZE, shuffle=True)
-    
+    audio_mnist_dataset_train = AudioMNISTDataset(AUDIO_DIR_PATH,
+                                                  mel_spectrogram_transformation,
+                                                  NUM_SAMPLES,
+                                                  device,
+                                                  train_set=True)
+
+    train_dataloader = DataLoader(
+        audio_mnist_dataset_train, batch_size=BATCH_SIZE, shuffle=True)
+
     # construct model and assign it to device
     audio_mnist_model = AudioMNISTModel().to(device)
     print(audio_mnist_model)
@@ -73,9 +74,10 @@ if __name__ == "__main__":
     loss_fn = nn.CrossEntropyLoss()
     optimiser = torch.optim.Adam(audio_mnist_model.parameters(),
                                  lr=LEARNING_RATE)
-    
+
     # train model
-    train(audio_mnist_model, train_dataloader, loss_fn, optimiser, device, EPOCHS)
+    train(audio_mnist_model, train_dataloader,
+          loss_fn, optimiser, device, EPOCHS)
 
     # save model
     torch.save(audio_mnist_model.state_dict(), "AudioMNISTModel.pth")
